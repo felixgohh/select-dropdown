@@ -164,39 +164,44 @@ const SelectDropdown = ({
       >
         <div
           className="flex flex-row items-center justify-between gap-5 h-[45px] max-h-[45px] p-[10px] rounded-lg border border-gray-500"
-          onClick={(ev) =>
-            !ev.target.className.includes('remove-option') && setIsOpen(!isOpen)
-          }
+          onClick={(ev) => {
+            let parentEl = ev.target.parentElement;
+            if (
+              parentEl.tagName !== 'svg' &&
+              parentEl.className &&
+              !parentEl.className.includes('remove-option')
+            )
+              setIsOpen(!isOpen);
+          }}
         >
           <div className="flex flex-row gap-[5px] overflow-auto">
             {multiple
-              ? selectedOptions.length > 0
+              ? selectedOptions && selectedOptions.length > 0
                 ? selectedOptions.map((option, idx) => (
                     <span
                       key={`selected-${idx}`}
                       className="flex flex-row items-center gap-[5px] text-sm p-[5px] rounded-lg bg-gray-200"
                     >
-                      {getOptionLabel(option)}
+                      <p className="line-clamp-1">{getOptionLabel(option)}</p>
                       <button
                         type="button"
-                        className="flex text-gray-600 text-base"
+                        className="flex text-gray-600 text-base remove-option"
                         onClick={() => handleOptionClick(option)}
                       >
-                        <ion-icon
-                          name="close-circle-outline"
-                          class="remove-option"
-                        ></ion-icon>
+                        <XCircleIconOutline className="w-3 h-3" />
                       </button>
                     </span>
                   ))
                 : placeholder
               : selectedOptions
-              ? getOptionLabel(selectedOptions)
-              : placeholder}
+                ? getOptionLabel(selectedOptions)
+                : placeholder}
           </div>
-          <ion-icon
-            name={`chevron-${isOpen ? 'up' : 'down'}-outline`}
-          ></ion-icon>
+          {isOpen ? (
+            <ChevronUpIcon className="min-w-3 h-3" />
+          ) : (
+            <ChevronDownIcon className="min-w-3 h-3" />
+          )}
         </div>
         {isOpen && renderOptions()}
       </div>
