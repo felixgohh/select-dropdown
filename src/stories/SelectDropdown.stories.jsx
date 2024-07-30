@@ -12,6 +12,7 @@ const Template = (args) => <SelectDropdown {...args} />;
 
 export const Default = Template.bind({});
 Default.args = {
+  id: 'university-select',
   labelText: 'University',
   placeholder: 'Choose...',
   options: jsonData.universities,
@@ -23,6 +24,7 @@ Default.args = {
 export const MultipleSelect = Template.bind({});
 MultipleSelect.args = {
   labelText: 'Skills',
+  id: 'skills-select',
   placeholder: 'Choose...',
   options: jsonData.tech_stacks,
   multiple: true,
@@ -35,6 +37,7 @@ WithoutSearch.args = {
   labelText: 'Gender',
   placeholder: 'Choose...',
   options: jsonData.gender,
+  outlined: false,
   multiple: false,
   searchable: false,
   onChange: (selected) => console.log(selected),

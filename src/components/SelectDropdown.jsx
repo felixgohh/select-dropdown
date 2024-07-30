@@ -9,6 +9,7 @@ import {
 import { XCircleIcon } from '@heroicons/react/24/solid';
 
 const SelectDropdown = ({
+  id,
   labelText = 'Label',
   placeholder,
   options = [],
@@ -16,6 +17,7 @@ const SelectDropdown = ({
   renderOption,
   onChange,
   searchable = false,
+  outlined = true,
   disablePortal = false,
 }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -87,9 +89,9 @@ const SelectDropdown = ({
     );
 
   const renderOptionsContent = () => (
-    <div className="bg-white w-full border border-gray-400 rounded-lg shadow-popover">
+    <div className="bg-white w-full rounded-lg border border-gray-200 shadow-lg">
       {searchable && (
-        <div className="flex flex-row items-center border-b border-b-gray-400 w-full p-[8px_10px] rounded-tl-lg rounded-tr-lg">
+        <div className="flex flex-row items-center border-b border-b-gray-200 w-full p-[8px_10px] rounded-tl-lg rounded-tr-lg">
           <MagnifyingGlassIcon className="w-3 h-3" />
           <input
             type="text"
@@ -165,9 +167,10 @@ const SelectDropdown = ({
       <div
         className="relative flex flex-col min-w-[75%] max-w-[75%] bg-white cursor-pointer"
         ref={selectRef}
+        id={id}
       >
         <div
-          className="flex flex-row items-center justify-between gap-5 h-[45px] max-h-[45px] p-[10px] rounded-lg border border-gray-500"
+          className={`flex flex-row items-center justify-between gap-5 h-[45px] max-h-[45px] p-[10px] rounded-lg ${outlined ? 'border border-gray-300' : 'bg-gray-300'} `}
           onClick={(ev) => {
             let parentEl = ev.target.parentElement;
             if (
@@ -192,7 +195,7 @@ const SelectDropdown = ({
                         className="flex text-gray-600 text-base remove-option"
                         onClick={() => handleOptionClick(option)}
                       >
-                        <XCircleIconOutline className="w-3 h-3" />
+                        <XCircleIconOutline className="w-4 h-4" />
                       </button>
                     </span>
                   ))
@@ -202,9 +205,9 @@ const SelectDropdown = ({
                 : placeholder}
           </div>
           {isOpen ? (
-            <ChevronUpIcon className="min-w-3 h-3" />
+            <ChevronUpIcon className="min-w-4 h-4 stroke-2" />
           ) : (
-            <ChevronDownIcon className="min-w-3 h-3" />
+            <ChevronDownIcon className="min-w-4 h-4 stroke-2" />
           )}
         </div>
         {isOpen && renderOptions()}

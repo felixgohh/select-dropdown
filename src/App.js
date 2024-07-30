@@ -7,6 +7,7 @@ function App() {
       <h1 className="mb-5 text-2xl font-bold">Searchable Dropdown</h1>
       <SelectDropdown
         labelText="Skills"
+        id="skills-select"
         searchable
         options={jsonData.tech_stacks}
         placeholder="Select more than 1"
@@ -14,12 +15,14 @@ function App() {
       />
       <SelectDropdown
         labelText="University"
+        id="university-select"
         searchable
         options={jsonData.universities}
       />
       <SelectDropdown
         labelText="Years of Experience"
         options={Array.from({ length: 10 }, (_, i) => i + 1)}
+        outlined={false}
       />
       <SelectDropdown
         labelText="Gender"
