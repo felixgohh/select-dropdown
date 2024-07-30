@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import ReactDOM from 'react-dom';
+import { usePortal } from '../contexts/portal';
 import {
   XCircleIcon as XCircleIconOutline,
   MagnifyingGlassIcon,
@@ -23,20 +24,8 @@ const SelectDropdown = ({
   const [isOpen, setIsOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedOptions, setSelectedOptions] = useState(multiple ? [] : null);
-  const [portalElement, setPortalElement] = useState(null);
+  const portalElement = usePortal();
   const selectRef = useRef(null);
-
-  useEffect(() => {
-    if (!disablePortal) {
-      const el = document.createElement('div');
-      document.body.appendChild(el);
-      setPortalElement(el);
-
-      return () => {
-        document.body.removeChild(el);
-      };
-    }
-  }, [disablePortal]);
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -57,6 +46,10 @@ const SelectDropdown = ({
   useEffect(() => {
     setSelectedOptions(multiple ? [] : null);
   }, [multiple]);
+
+  useEffect(() => {
+    if (!searchable) setSearchQuery('');
+  }, [searchable]);
 
   const getOptionLabel = (option) =>
     typeof option === 'object' ? option.label : String(option);
@@ -117,7 +110,7 @@ const SelectDropdown = ({
               key={`option-${index}`}
               onClick={() => handleOptionClick(option)}
               className={`py-[5px] px-[10px] cursor-pointer last:rounded-br-lg last:rounded-bl-lg ${
-                (multiple
+                (multiple && selectedOptions
                   ? selectedOptions.includes(option)
                   : selectedOptions === option) && 'bg-gray-100 font-semibold'
               } ${!searchable && 'first:rounded-tl-lg first:rounded-tr-lg'}`}
@@ -144,26 +137,29 @@ const SelectDropdown = ({
         </div>
       );
     }
-    return portalElement
-      ? ReactDOM.createPortal(
-          <div
-            style={{
-              position: 'absolute',
-              top: parentRect?.bottom + 5,
-              left: parentRect?.left,
-              width: parentRect?.width,
-            }}
-          >
-            {renderOptionsContent()}
-          </div>,
-          portalElement
-        )
-      : null;
+    return (
+      portalElement &&
+      ReactDOM.createPortal(
+        <div
+          style={{
+            position: 'absolute',
+            top: parentRect?.bottom + 5,
+            left: parentRect?.left,
+            width: parentRect?.width,
+          }}
+        >
+          {renderOptionsContent()}
+        </div>,
+        portalElement
+      )
+    );
   };
 
   return (
     <div className="flex flex-row items-center gap-20 w-full">
-      <label className="w-1/4 font-semibold">{labelText}</label>
+      <label className="w-1/4 font-semibold" htmlFor={id}>
+        {labelText}
+      </label>
       <div
         className="relative flex flex-col min-w-[75%] max-w-[75%] bg-white cursor-pointer"
         ref={selectRef}

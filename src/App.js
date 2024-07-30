@@ -21,11 +21,13 @@ function App() {
       />
       <SelectDropdown
         labelText="Years of Experience"
+        id="years-exp-select"
         options={Array.from({ length: 10 }, (_, i) => i + 1)}
         outlined={false}
       />
       <SelectDropdown
         labelText="Gender"
+        id="gender-select"
         options={jsonData.gender}
         disablePortal
       />
