@@ -52,6 +52,10 @@ const SelectDropdown = ({
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, [portalElement]);
 
+  useEffect(() => {
+    setSelectedOptions(multiple ? [] : null);
+  }, [multiple]);
+
   const getOptionLabel = (option) =>
     typeof option === 'object' ? option.label : String(option);
 
@@ -113,7 +117,7 @@ const SelectDropdown = ({
               className={`py-[5px] px-[10px] cursor-pointer last:rounded-br-lg last:rounded-bl-lg ${
                 (multiple
                   ? selectedOptions.includes(option)
-                  : selectedOptions === option) && 'bg-gray-100'
+                  : selectedOptions === option) && 'bg-gray-100 font-semibold'
               } ${!searchable && 'first:rounded-tl-lg first:rounded-tr-lg'}`}
             >
               {renderOption
