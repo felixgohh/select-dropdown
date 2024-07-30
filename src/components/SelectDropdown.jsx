@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import ReactDOM from 'react-dom';
+import { usePortal } from '../contexts/portal';
 import {
   XCircleIcon as XCircleIconOutline,
   MagnifyingGlassIcon,
@@ -23,20 +24,8 @@ const SelectDropdown = ({
   const [isOpen, setIsOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedOptions, setSelectedOptions] = useState(multiple ? [] : null);
-  const [portalElement, setPortalElement] = useState(null);
+  const portalElement = usePortal();
   const selectRef = useRef(null);
-
-  useEffect(() => {
-    if (!disablePortal) {
-      const el = document.createElement('div');
-      document.body.appendChild(el);
-      setPortalElement(el);
-
-      return () => {
-        document.body.removeChild(el);
-      };
-    }
-  }, [disablePortal]);
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -144,21 +133,22 @@ const SelectDropdown = ({
         </div>
       );
     }
-    return portalElement
-      ? ReactDOM.createPortal(
-          <div
-            style={{
-              position: 'absolute',
-              top: parentRect?.bottom + 5,
-              left: parentRect?.left,
-              width: parentRect?.width,
-            }}
-          >
-            {renderOptionsContent()}
-          </div>,
-          portalElement
-        )
-      : null;
+    return (
+      portalElement &&
+      ReactDOM.createPortal(
+        <div
+          style={{
+            position: 'absolute',
+            top: parentRect?.bottom + 5,
+            left: parentRect?.left,
+            width: parentRect?.width,
+          }}
+        >
+          {renderOptionsContent()}
+        </div>,
+        portalElement
+      )
+    );
   };
 
   return (
