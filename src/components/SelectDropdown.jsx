@@ -108,11 +108,11 @@ const SelectDropdown = ({
           )}
         </div>
       )}
-      <div className="max-h-[40vh] overflow-auto">
+      <ul className="max-h-[40vh] overflow-auto">
         {filteredOptions.length ? (
           filteredOptions.map((option, index) => (
-            <div
-              key={index}
+            <li
+              key={`option-${index}`}
               onClick={() => handleOptionClick(option)}
               className={`py-[5px] px-[10px] cursor-pointer last:rounded-br-lg last:rounded-bl-lg ${
                 (multiple
@@ -123,12 +123,12 @@ const SelectDropdown = ({
               {renderOption
                 ? renderOption(option)
                 : getHighlightedText(getOptionLabel(option))}
-            </div>
+            </li>
           ))
         ) : (
-          <p className="p-[10px] text-sm">Not Found</p>
+          <li className="p-[10px] text-sm">Not Found</li>
         )}
-      </div>
+      </ul>
     </div>
   );
 
