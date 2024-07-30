@@ -47,6 +47,10 @@ const SelectDropdown = ({
     setSelectedOptions(multiple ? [] : null);
   }, [multiple]);
 
+  useEffect(() => {
+    if (!searchable) setSearchQuery('');
+  }, [searchable]);
+
   const getOptionLabel = (option) =>
     typeof option === 'object' ? option.label : String(option);
 
@@ -106,7 +110,7 @@ const SelectDropdown = ({
               key={`option-${index}`}
               onClick={() => handleOptionClick(option)}
               className={`py-[5px] px-[10px] cursor-pointer last:rounded-br-lg last:rounded-bl-lg ${
-                (multiple
+                (multiple && selectedOptions
                   ? selectedOptions.includes(option)
                   : selectedOptions === option) && 'bg-gray-100 font-semibold'
               } ${!searchable && 'first:rounded-tl-lg first:rounded-tr-lg'}`}
