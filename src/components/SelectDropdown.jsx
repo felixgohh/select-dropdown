@@ -1,5 +1,12 @@
 import { useEffect, useRef, useState } from 'react';
 import ReactDOM from 'react-dom';
+import {
+  XCircleIcon as XCircleIconOutline,
+  MagnifyingGlassIcon,
+  ChevronUpIcon,
+  ChevronDownIcon,
+} from '@heroicons/react/24/outline';
+import { XCircleIcon } from '@heroicons/react/24/solid';
 
 const SelectDropdown = ({
   labelText = 'Label',
@@ -79,7 +86,7 @@ const SelectDropdown = ({
     <div className="bg-white w-full border border-gray-400 rounded-lg shadow-popover">
       {searchable && (
         <div className="flex flex-row items-center border-b border-b-gray-400 w-full p-[8px_10px] rounded-tl-lg rounded-tr-lg">
-          <ion-icon name="search-outline"></ion-icon>
+          <MagnifyingGlassIcon className="w-3 h-3" />
           <input
             type="text"
             value={searchQuery}
@@ -92,7 +99,7 @@ const SelectDropdown = ({
               className="flex text-gray-500 cursor-pointer ml-auto"
               onClick={() => setSearchQuery('')}
             >
-              <ion-icon name="close-circle"></ion-icon>
+              <XCircleIcon className="w-4 h-4" />
             </button>
           )}
         </div>
