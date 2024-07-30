@@ -153,7 +153,9 @@ const SelectDropdown = ({
 
   return (
     <div className="flex flex-row items-center gap-20 w-full">
-      <label className="w-1/4 font-semibold">{labelText}</label>
+      <label className="w-1/4 font-semibold" htmlFor={id}>
+        {labelText}
+      </label>
       <div
         className="relative flex flex-col min-w-[75%] max-w-[75%] bg-white cursor-pointer"
         ref={selectRef}
