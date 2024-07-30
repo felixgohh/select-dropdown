@@ -2,11 +2,6 @@ import SelectDropdown from './components/SelectDropdown';
 import jsonData from './data/data.json';
 
 function App() {
-  const genderOptions = [
-    { label: 'Male', value: 'male' },
-    { label: 'Female', value: 'female' },
-  ];
-
   return (
     <main className="flex flex-col justify-center items-center my-5 w-[80%] mx-auto gap-5">
       <h1 className="mb-5 text-2xl font-bold">Searchable Dropdown</h1>
@@ -28,7 +23,7 @@ function App() {
       />
       <SelectDropdown
         labelText="Gender"
-        options={genderOptions}
+        options={jsonData.gender}
         disablePortal
       />
     </main>
