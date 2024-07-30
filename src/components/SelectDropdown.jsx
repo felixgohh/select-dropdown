@@ -1,7 +1,15 @@
 import { useEffect, useRef, useState } from 'react';
 import ReactDOM from 'react-dom';
+import {
+  XCircleIcon as XCircleIconOutline,
+  MagnifyingGlassIcon,
+  ChevronUpIcon,
+  ChevronDownIcon,
+} from '@heroicons/react/24/outline';
+import { XCircleIcon } from '@heroicons/react/24/solid';
 
 const SelectDropdown = ({
+  id,
   labelText = 'Label',
   placeholder,
   options = [],
@@ -9,6 +17,7 @@ const SelectDropdown = ({
   renderOption,
   onChange,
   searchable = false,
+  outlined = true,
   disablePortal = false,
 }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -45,6 +54,10 @@ const SelectDropdown = ({
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, [portalElement]);
 
+  useEffect(() => {
+    setSelectedOptions(multiple ? [] : null);
+  }, [multiple]);
+
   const getOptionLabel = (option) =>
     typeof option === 'object' ? option.label : String(option);
 
@@ -76,10 +89,10 @@ const SelectDropdown = ({
     );
 
   const renderOptionsContent = () => (
-    <div className="bg-white w-full border border-gray-400 rounded-lg shadow-popover">
+    <div className="bg-white w-full rounded-lg border border-gray-200 shadow-lg">
       {searchable && (
-        <div className="flex flex-row items-center border-b border-b-gray-400 w-full p-[8px_10px] rounded-tl-lg rounded-tr-lg">
-          <ion-icon name="search-outline"></ion-icon>
+        <div className="flex flex-row items-center border-b border-b-gray-200 w-full p-[8px_10px] rounded-tl-lg rounded-tr-lg">
+          <MagnifyingGlassIcon className="w-3 h-3" />
           <input
             type="text"
             value={searchQuery}
@@ -92,32 +105,32 @@ const SelectDropdown = ({
               className="flex text-gray-500 cursor-pointer ml-auto"
               onClick={() => setSearchQuery('')}
             >
-              <ion-icon name="close-circle"></ion-icon>
+              <XCircleIcon className="w-4 h-4" />
             </button>
           )}
         </div>
       )}
-      <div className="max-h-[40vh] overflow-auto">
+      <ul className="max-h-[40vh] overflow-auto">
         {filteredOptions.length ? (
           filteredOptions.map((option, index) => (
-            <div
-              key={index}
+            <li
+              key={`option-${index}`}
               onClick={() => handleOptionClick(option)}
               className={`py-[5px] px-[10px] cursor-pointer last:rounded-br-lg last:rounded-bl-lg ${
                 (multiple
                   ? selectedOptions.includes(option)
-                  : selectedOptions === option) && 'bg-gray-100'
+                  : selectedOptions === option) && 'bg-gray-100 font-semibold'
               } ${!searchable && 'first:rounded-tl-lg first:rounded-tr-lg'}`}
             >
               {renderOption
                 ? renderOption(option)
                 : getHighlightedText(getOptionLabel(option))}
-            </div>
+            </li>
           ))
         ) : (
-          <p className="p-[10px] text-sm">Not Found</p>
+          <li className="p-[10px] text-sm">Not Found</li>
         )}
-      </div>
+      </ul>
     </div>
   );
 
@@ -154,42 +167,48 @@ const SelectDropdown = ({
       <div
         className="relative flex flex-col min-w-[75%] max-w-[75%] bg-white cursor-pointer"
         ref={selectRef}
+        id={id}
       >
         <div
-          className="flex flex-row items-center justify-between gap-5 h-[45px] max-h-[45px] p-[10px] rounded-lg border border-gray-500"
-          onClick={(ev) =>
-            !ev.target.className.includes('remove-option') && setIsOpen(!isOpen)
-          }
+          className={`flex flex-row items-center justify-between gap-5 h-[45px] max-h-[45px] p-[10px] rounded-lg ${outlined ? 'border border-gray-300' : 'bg-gray-300'} `}
+          onClick={(ev) => {
+            let parentEl = ev.target.parentElement;
+            if (
+              parentEl.tagName !== 'svg' &&
+              parentEl.className &&
+              !parentEl.className.includes('remove-option')
+            )
+              setIsOpen(!isOpen);
+          }}
         >
           <div className="flex flex-row gap-[5px] overflow-auto">
             {multiple
-              ? selectedOptions.length > 0
+              ? selectedOptions && selectedOptions.length > 0
                 ? selectedOptions.map((option, idx) => (
                     <span
                       key={`selected-${idx}`}
                       className="flex flex-row items-center gap-[5px] text-sm p-[5px] rounded-lg bg-gray-200"
                     >
-                      {getOptionLabel(option)}
+                      <p className="line-clamp-1">{getOptionLabel(option)}</p>
                       <button
                         type="button"
-                        className="flex text-gray-600 text-base"
+                        className="flex text-gray-600 text-base remove-option"
                         onClick={() => handleOptionClick(option)}
                       >
-                        <ion-icon
-                          name="close-circle-outline"
-                          class="remove-option"
-                        ></ion-icon>
+                        <XCircleIconOutline className="w-4 h-4" />
                       </button>
                     </span>
                   ))
                 : placeholder
               : selectedOptions
-              ? getOptionLabel(selectedOptions)
-              : placeholder}
+                ? getOptionLabel(selectedOptions)
+                : placeholder}
           </div>
-          <ion-icon
-            name={`chevron-${isOpen ? 'up' : 'down'}-outline`}
-          ></ion-icon>
+          {isOpen ? (
+            <ChevronUpIcon className="min-w-4 h-4 stroke-2" />
+          ) : (
+            <ChevronDownIcon className="min-w-4 h-4 stroke-2" />
+          )}
         </div>
         {isOpen && renderOptions()}
       </div>
