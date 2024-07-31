@@ -1,6 +1,4 @@
 import { useEffect, useRef, useState } from 'react';
-import ReactDOM from 'react-dom';
-import { usePortal } from '../contexts/portal';
 import {
   XCircleIcon as XCircleIconOutline,
   MagnifyingGlassIcon,
@@ -8,6 +6,7 @@ import {
   ChevronDownIcon,
 } from '@heroicons/react/24/outline';
 import { XCircleIcon } from '@heroicons/react/24/solid';
+import Portal from './Portal';
 
 const SelectDropdown = ({
   id,
@@ -24,24 +23,7 @@ const SelectDropdown = ({
   const [isOpen, setIsOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedOptions, setSelectedOptions] = useState(multiple ? [] : null);
-  const portalElement = usePortal();
   const selectRef = useRef(null);
-
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      const portalElementClicked =
-        portalElement && portalElement.contains(event.target);
-      if (
-        selectRef.current &&
-        !selectRef.current.contains(event.target) &&
-        !portalElementClicked
-      ) {
-        setIsOpen(false);
-      }
-    };
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, [portalElement]);
 
   useEffect(() => {
     setSelectedOptions(multiple ? [] : null);
@@ -128,30 +110,14 @@ const SelectDropdown = ({
   );
 
   const renderOptions = () => {
-    const parentRect = selectRef.current?.getBoundingClientRect();
-
-    if (disablePortal) {
-      return (
-        <div className="absolute z-[9999] top-[50px] left-0 w-full">
-          {renderOptionsContent()}
-        </div>
-      );
-    }
     return (
-      portalElement &&
-      ReactDOM.createPortal(
-        <div
-          style={{
-            position: 'absolute',
-            top: parentRect?.bottom + 5,
-            left: parentRect?.left,
-            width: parentRect?.width,
-          }}
-        >
-          {renderOptionsContent()}
-        </div>,
-        portalElement
-      )
+      <Portal
+        triggerRef={selectRef}
+        disablePortal={disablePortal}
+        onClickOutside={() => setIsOpen(false)}
+      >
+        {renderOptionsContent()}
+      </Portal>
     );
   };
 
@@ -179,7 +145,9 @@ const SelectDropdown = ({
         >
           <div className="flex flex-row gap-[5px] overflow-auto">
             {multiple
-              ? selectedOptions && selectedOptions.length > 0
+              ? selectedOptions &&
+                selectedOptions.length &&
+                typeof selectedOptions === 'object'
                 ? selectedOptions.map((option, idx) => (
                     <span
                       key={`selected-${idx}`}
