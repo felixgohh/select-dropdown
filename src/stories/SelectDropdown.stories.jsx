@@ -18,6 +18,7 @@ Default.args = {
   options: jsonData.universities,
   multiple: false,
   searchable: true,
+  outlined: true,
   onChange: (selected) => console.log(selected),
 };
 
@@ -29,6 +30,7 @@ MultipleSelect.args = {
   options: jsonData.tech_stacks,
   multiple: true,
   searchable: true,
+  outlined: true,
   onChange: (selected) => console.log(selected),
 };
 
