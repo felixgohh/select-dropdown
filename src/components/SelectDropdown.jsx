@@ -145,7 +145,9 @@ const SelectDropdown = ({
         >
           <div className="flex flex-row gap-[5px] overflow-auto">
             {multiple
-              ? selectedOptions && selectedOptions.length > 0
+              ? selectedOptions &&
+                selectedOptions.length &&
+                typeof selectedOptions === 'object'
                 ? selectedOptions.map((option, idx) => (
                     <span
                       key={`selected-${idx}`}
