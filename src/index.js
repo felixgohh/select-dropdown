@@ -3,13 +3,12 @@ import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
-import { PortalProvider } from './contexts/portal';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
-  <PortalProvider>
+  <React.StrictMode>
     <App />
-  </PortalProvider>
+  </React.StrictMode>
 );
 
 // If you want to start measuring performance in your app, pass a function
